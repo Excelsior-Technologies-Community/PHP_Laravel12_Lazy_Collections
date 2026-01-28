@@ -1,59 +1,407 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PHP_Laravel12_Lazy_Collections
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Project Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+PHP_Laravel12_Lazy_Collections is a Laravel 12 demonstration project created to understand and implement Lazy Collections for efficient data handling.
+The main goal of this project is to show how Laravel can process large datasets efficiently by loading records one at a time instead of loading all records into memory.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This project is designed especially for beginners and freshers to clearly understand the difference between normal collections and lazy collections using a simple and practical example.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Project Objective
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To understand what Lazy Collections are in Laravel
 
-## Laravel Sponsors
+To demonstrate how cursor() processes records one by one
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+To reduce memory usage while working with large database records
 
-### Premium Partners
+To implement Lazy Collections without using seeders
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+To follow proper Laravel 12 project structure and coding standards
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Technologies Used
 
-## Code of Conduct
+PHP 8+
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Laravel 12
 
-## Security Vulnerabilities
+MySQL
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Eloquent ORM
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+---
+
+
+
+
+# Project Setup & Step-by-Step Explanation
+
+---
+
+## STEP 1: Create New Laravel 12 Project
+
+### Run Command :
+
+```
+composer create-project laravel/laravel PHP_Laravel12_Lazy_Collections "12.*"
+
+```
+
+### Go inside project:
+
+```
+cd PHP_Laravel12_Lazy_Collections
+
+```
+
+Make sure Laravel 12 is installed successfully.
+
+
+
+## STEP 2: Database Configuration
+
+### Open .env file and update database credentials:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel12_lazy_collection
+DB_USERNAME=root
+DB_PASSWORD=
+
+```
+
+### Create database:
+
+```
+laravel12_lazy_collection
+
+```
+
+
+
+## STEP 3: Create Models + Migrations 
+
+### Run Command:
+
+```
+php artisan make:model UserRecord -m
+
+```
+Explaination:
+
+Creates a model for database interaction and a migration for table creation.
+This follows Laravel’s MVC architecture.
+
+
+
+## STEP 4: CHANGE MIGRATION NAME (IMPORTANT)
+
+### Go to:
+
+```
+database/migrations/
+
+```
+
+### Rename migration file:
+
+Before:
+
+```
+2026_01_28_000000_create_user_records_table.php
+
+```
+
+After (custom name):
+
+```
+2026_01_28_000000_create_lazy_user_records_table.php
+
+```
+
+Explaination:
+
+Renames the migration file for better clarity and customization.
+This helps clearly identify the purpose of the migration.
+
+
+
+
+## STEP 5: Edit Migrations and Models
+
+### database/migrations/2026_01_28_000000_create_lazy_user_records_table.php
+
+```
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+
+    public function up(): void
+    {
+        Schema::create('lazy_user_records', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('lazy_user_records');
+    }
+};
+
+
+```
+
+
+### app/Models/UserRecord.php
+
+```
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class UserRecord extends Model
+{
+    protected $table = 'lazy_user_records';
+
+    protected $fillable = [
+        'name',
+        'email',
+    ];
+}
+
+
+
+```
+### Then run migrations:
+
+```
+php artisan migrate
+
+```
+
+Explaination:
+
+Defines the database table structure in the migration file.
+The model is updated to map with the custom table name.
+
+
+
+
+## STEP 6: Insert Data (NO Seeder)
+
+### Open phpMyAdmin → lazy_user_records table
+
+Insert data manually or run SQL:
+
+```
+
+INSERT INTO lazy_user_records (name, email, created_at, updated_at) VALUES
+('User One', 'user1@gmail.com', NOW(), NOW()),
+('User Two', 'user2@gmail.com', NOW(), NOW()),
+('User Three', 'user3@gmail.com', NOW(), NOW()),
+('User Four', 'user4@gmail.com', NOW(), NOW());
+
+
+```
+Explaination:
+
+Dummy data is inserted manually into the database table.
+Seeders are intentionally avoided as per project requirement.
+
+
+
+
+## STEP 7: Create Controller
+
+### Run command:
+
+```
+php artisan make:controller LazyCollectionController
+
+```
+
+
+### app/Http/Controllers/LazyCollectionController.php
+
+```
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\UserRecord;
+
+class LazyCollectionController extends Controller
+{
+    public function index()
+    {
+        // cursor() = Lazy Collection
+        $users = UserRecord::cursor();
+
+        $response = [];
+
+        foreach ($users as $user) {
+            // Processing ONE record at a time
+            $response[] = [
+                'id'    => $user->id,
+                'name'  => strtoupper($user->name),
+                'email' => $user->email,
+            ];
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Lazy Collection Example',
+            'data' => $response
+        ]);
+    }
+}
+
+```
+
+Explaination:
+
+Creates a controller to handle Lazy Collection logic.
+Controllers manage the application’s business logic.
+
+
+
+
+## STEP 8: Route Setup
+
+### routes/web.php
+
+```
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LazyCollectionController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/lazy-users', [LazyCollectionController::class, 'index']);
+
+
+```
+
+Explaination:
+
+Defines a route to access Lazy Collection data via URL.
+Routes connect browser requests to controller methods.
+
+
+
+## STEP 9: Run Project
+
+## Start server:
+
+```
+php artisan serve
+
+```
+
+### Open browser:
+
+```
+http://127.0.0.1:8000/lazy-users
+
+```
+
+
+
+## So you can see this type Output:
+
+
+<img width="1919" height="956" alt="Screenshot 2026-01-28 110359" src="https://github.com/user-attachments/assets/eb58442b-d658-40dd-8206-446bf4a0e352" />
+
+
+
+---
+
+
+# Project Folder Structure:
+
+```
+
+PHP_Laravel12_Lazy_Collections
+│
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   │   └── LazyCollectionController.php
+│   │
+│   ├── Models
+│   │   └── UserRecord.php
+│   │
+│   └── Providers
+│
+├── bootstrap
+│   └── app.php
+│
+├── config
+│   ├── app.php
+│   ├── database.php
+│   └── ...
+│
+├── database
+│   ├── migrations
+│   │   └── 2026_01_28_000000_create_lazy_user_records_table.php
+│   │
+│   └── factories
+│
+├── public
+│   └── index.php
+│
+├── resources
+│   ├── views
+│   │   └── welcome.blade.php
+│
+├── routes
+│   ├── web.php
+│   └── console.php
+│
+├── storage
+│   ├── app
+│   ├── framework
+│   └── logs
+│
+├── tests
+│   ├── Feature
+│   └── Unit
+│
+├── vendor
+│
+├── .env
+├── .env.example
+├── artisan
+├── composer.json
+├── composer.lock
+├── package.json
+└── README.md
+```
+
+```
