@@ -9,6 +9,6 @@ class UserRecordSeeder extends Seeder
 {
     public function run(): void
     {
-        UserRecord::factory()->count(10)->create();
+        UserRecord::factory()->count(1000)->create();
     }
 }
